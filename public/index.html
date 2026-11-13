@@ -828,6 +828,7 @@
   </style>
 </head>
 <body>
+  <canvas id="petalCanvas"></canvas>
 
 
 
@@ -1009,59 +1010,70 @@
       var rT; window.addEventListener('resize', function () { clearTimeout(rT); rT = setTimeout(function () { resize(false); }, 150); });
       window.addEventListener('orientationchange', function () { setTimeout(function () { resize(true); }, 250); });
 
-      /* ── pre-render one sprite per colour: halo + slender star + bright core ── */
-      var COLS = ['235,244,252', '200,220,238', '255,255,255', '176,200,224'];
-      var SP = 64, SPRITES = COLS.map(function (col) {
-        var c = document.createElement('canvas'); c.width = c.height = SP;
-        var g = c.getContext('2d'), m = SP / 2, R = SP * 0.30;
-        var h = g.createRadialGradient(m, m, 0, m, m, m);
-        h.addColorStop(0, 'rgba(' + col + ',0.32)'); h.addColorStop(1, 'rgba(' + col + ',0)');
-        g.fillStyle = h; g.beginPath(); g.arc(m, m, m, 0, Math.PI * 2); g.fill();
-        g.fillStyle = 'rgba(' + col + ',1)'; g.beginPath();
-        g.moveTo(m, m - R);
-        g.quadraticCurveTo(m + R * 0.08, m - R * 0.08, m + R * 0.72, m);
-        g.quadraticCurveTo(m + R * 0.08, m + R * 0.08, m, m + R);
-        g.quadraticCurveTo(m - R * 0.08, m + R * 0.08, m - R * 0.72, m);
-        g.quadraticCurveTo(m - R * 0.08, m - R * 0.08, m, m - R);
-        g.fill();
-        g.fillStyle = 'rgba(255,255,250,0.95)'; g.beginPath(); g.arc(m, m, R * 0.14, 0, Math.PI * 2); g.fill();
-        return c;
-      });
+      /* ── falling flowers from the garden reference: hydrangea & lilac florets,
+            white blossoms, blush and vintage-rose petals (pre-rendered sprites) ── */
+      var SP = 64;
+      function sprite(draw) { var c = document.createElement('canvas'); c.width = c.height = SP; draw(c.getContext('2d'), SP / 2); return c; }
+      function floret(n, fill, edge, centre, dot) {
+        return sprite(function (g, m) {
+          for (var i = 0; i < n; i++) {
+            g.save(); g.translate(m, m); g.rotate(i * Math.PI * 2 / n);
+            g.beginPath(); g.ellipse(0, -m * 0.38, m * (n === 4 ? 0.30 : 0.24), m * 0.40, 0, 0, Math.PI * 2);
+            var gr = g.createLinearGradient(0, -m * 0.8, 0, 0); gr.addColorStop(0, fill); gr.addColorStop(1, edge);
+            g.fillStyle = gr; g.fill(); g.restore();
+          }
+          g.fillStyle = centre; g.beginPath(); g.arc(m, m, m * 0.13, 0, Math.PI * 2); g.fill();
+          if (dot) { g.fillStyle = dot; g.beginPath(); g.arc(m, m, m * 0.06, 0, Math.PI * 2); g.fill(); }
+        });
+      }
+      function petal(fill, edge) {
+        return sprite(function (g, m) {
+          g.translate(m, m);
+          g.beginPath(); g.moveTo(0, m * 0.78);
+          g.bezierCurveTo(m * 0.62, m * 0.35, m * 0.55, -m * 0.62, 0, -m * 0.70);
+          g.bezierCurveTo(-m * 0.55, -m * 0.62, -m * 0.62, m * 0.35, 0, m * 0.78);
+          var gr = g.createLinearGradient(0, -m * 0.7, 0, m * 0.8); gr.addColorStop(0, fill); gr.addColorStop(1, edge);
+          g.fillStyle = gr; g.fill();
+          g.strokeStyle = 'rgba(255,255,255,0.45)'; g.lineWidth = 1; g.beginPath(); g.moveTo(0, m * 0.6); g.lineTo(0, -m * 0.4); g.stroke();
+        });
+      }
+      var SPRITES = [
+        floret(4, '#C9D8EC', '#93AECF', '#F4EFE6', '#8DA0C4'),   /* blue hydrangea floret */
+        floret(4, '#C9D8EC', '#93AECF', '#F4EFE6', '#8DA0C4'),
+        floret(4, '#D9C6E6', '#A98BC4', '#F7F0E2', '#8E6FB0'),   /* lilac / wisteria floret */
+        floret(4, '#D9C6E6', '#A98BC4', '#F7F0E2', '#8E6FB0'),
+        floret(5, '#FFFFFF', '#ECE6EA', '#E9C766', null),        /* white blossom */
+        petal('#F4D9DC', '#E2B3BA'),                             /* blush petal */
+        petal('#DDB6C5', '#C38FA4')                              /* vintage rose petal */
+      ];
 
       function Spark(start) { this.init(start); }
       Spark.prototype.init = function (start) {
         this.x = Math.random() * vw;
-        this.y = start ? Math.random() * vh : -16;
-        this.r = 0.9 + Math.random() * 1.4;
-        this.vy = 0.10 + Math.random() * 0.18;
-        this.sway = Math.random() * 6.283; this.swayS = 0.003 + Math.random() * 0.004; this.swayA = 0.12 + Math.random() * 0.18;
-        this.tw = Math.random() * 6.283; this.twS = 0.012 + Math.random() * 0.018;
-        this.ci = Math.floor(Math.random() * COLS.length);
-        this.op = 0.55 + Math.random() * 0.4;
+        this.y = start ? Math.random() * vh : -24;
+        this.ci = Math.floor(Math.random() * SPRITES.length);
+        this.size = (this.ci >= 5 ? 14 : 17) + Math.random() * (isMobile ? 7 : 10);
+        this.vy = 0.28 + Math.random() * 0.32;
+        this.sway = Math.random() * 6.283; this.swayS = 0.008 + Math.random() * 0.008; this.swayA = 0.25 + Math.random() * 0.35;
+        this.rot = Math.random() * 6.283; this.rotS = (Math.random() - 0.5) * 0.03;
+        this.flip = Math.random() * 6.283; this.flipS = 0.015 + Math.random() * 0.02;
+        this.op = 0.70 + Math.random() * 0.25;
         this.fade = start ? 1 : 0;
       };
       Spark.prototype.step = function (k) {
-        this.sway += this.swayS * k; this.tw += this.twS * k;
+        this.sway += this.swayS * k; this.rot += this.rotS * k; this.flip += this.flipS * k;
         this.x += Math.sin(this.sway) * this.swayA * k; this.y += this.vy * k;
-        if (this.fade < 1) this.fade = Math.min(1, this.fade + 0.006 * k);
-        if (this.y > vh + 16) this.init(false);
-        var t = 0.5 + 0.5 * Math.sin(this.tw);
-        var o = this.op * this.fade * (0.25 + 0.75 * t);
-        var R = this.r * (3.2 + 1.6 * t);           /* star radius */
-        var S = R / 0.30;                            /* sprite draw size */
-        ctx.globalAlpha = o;
-        ctx.drawImage(SPRITES[this.ci], this.x - S / 2, this.y - S / 2, S, S);
-        if (t > 0.86) {                              /* brief cross flare at peak */
-          var f = (t - 0.86) / 0.14, L = R * 2.2;
-          ctx.globalAlpha = o * 0.55 * f;
-          ctx.fillStyle = '#FFFFFF';
-          ctx.fillRect(this.x - L, this.y - 0.25, L * 2, 0.5);
-          ctx.fillRect(this.x - 0.25, this.y - L, 0.5, L * 2);
-        }
+        if (this.fade < 1) this.fade = Math.min(1, this.fade + 0.01 * k);
+        if (this.y > vh + 24) this.init(false);
+        var sx = 0.55 + 0.45 * Math.abs(Math.cos(this.flip));   /* gentle tumble */
+        ctx.globalAlpha = this.op * this.fade;
+        ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rot); ctx.scale(sx, 1);
+        ctx.drawImage(SPRITES[this.ci], -this.size / 2, -this.size / 2, this.size, this.size);
+        ctx.restore();
       };
 
-      var count = isMobile ? Math.max(9, Math.min(14, Math.floor(vw / 34)))
-                           : Math.max(12, Math.min(22, Math.floor(vw / 60)));
+      var count = isMobile ? Math.max(10, Math.min(14, Math.floor(vw / 32)))
+                           : Math.max(14, Math.min(24, Math.floor(vw / 58)));
       var sparks = []; for (var i = 0; i < count; i++) sparks.push(new Spark(true));
 
       var running = true, last = 0, raf = 0;
