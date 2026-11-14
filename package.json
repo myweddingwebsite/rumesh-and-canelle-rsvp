@@ -1,7 +1,7 @@
 {
-  "name": "rumesher-canelle-wedding-rsvp",
+  "name": "rumesh-canelle-wedding-rsvp",
   "version": "1.0.0",
-  "description": "Wedding RSVP — Rumesher & Canelle (Vercel Functions + Neon Postgres)",
+  "description": "Wedding RSVP — Rumesh & Canelle (Vercel Functions + Neon Postgres)",
   "scripts": {
     "dev": "vercel dev"
   },

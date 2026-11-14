@@ -1,4 +1,4 @@
-# Rumesher & Canelle — Wedding RSVP (Vercel + Neon)
+# Rumesh & Canelle — Wedding RSVP (Vercel + Neon)
 
 Modern Filipiniana · Monet garden palette (midnight #060641, deep plum, dusk blue, vintage rose, blush, wisteria, misty sage, soft ivory) · RC monogram · **January 18, 2027** · RSVP on or before **December 12, 2026**
 Made by Love, Anne (@loveanne.ph) & Nexcellent Solutions.

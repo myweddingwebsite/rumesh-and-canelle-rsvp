@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>RSVP Admin — Rumesher &amp; Canelle</title>
+  <title>RSVP Admin — Rumesh &amp; Canelle</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Pinyon+Script&family=Cinzel:wght@400;500;600;700&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     :root {
-      /* v2 template — Modern Filipiniana · Monet Garden (Rumesher & Canelle).
+      /* v2 template — Modern Filipiniana · Monet Garden (Rumesh & Canelle).
          Variable names kept from the original admin. */
       --maroon-deep: #060641;   /* midnight */
       --maroon-dark: #0B0B5A;
@@ -460,7 +460,7 @@
   <div id="loginScreen">
     <div class="login-card"><div class="login-card-inner">
       <p class="login-eyebrow">RSVP Admin</p>
-      <h1 class="login-title">Rumesher &amp; Canelle</h1>
+      <h1 class="login-title">Rumesh &amp; Canelle</h1>
       <p class="login-sub">Sign in to manage the guest list</p>
       <input type="password" class="login-input" id="loginPassword" placeholder="Admin password" autocomplete="off" />
       <button class="login-btn" id="loginBtn" onclick="doLogin()">Sign In</button>
@@ -476,7 +476,7 @@
       <button class="sidebar-close" id="sidebarClose">&#10005;</button>
       <div class="sidebar-brand">
         <p class="sidebar-eyebrow">RSVP Admin</p>
-        <div class="sidebar-names">Rumesher &amp; Canelle</div>
+        <div class="sidebar-names">Rumesh &amp; Canelle</div>
       </div>
       <div class="sidebar-nav">
         <div class="nav-item active" data-view="dashboard"><span class="ic">&#9670;</span> Dashboard</div>
@@ -1450,7 +1450,7 @@
       var ws = XLSX.utils.json_to_sheet(data);
       var wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, 'Individual RSVP Responses');
-      XLSX.writeFile(wb, 'rumesher-canelle-individual-responses.xlsx');
+      XLSX.writeFile(wb, 'rumesh-canelle-individual-responses.xlsx');
     }
 
     /* ============================================================
@@ -1650,7 +1650,7 @@
       var ws = XLSX.utils.json_to_sheet(data);
       var wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, 'Guest List');
-      XLSX.writeFile(wb, 'rumesher-canelle-guest-list.xlsx');
+      XLSX.writeFile(wb, 'rumesh-canelle-guest-list.xlsx');
     }
 
     /* ============================================================

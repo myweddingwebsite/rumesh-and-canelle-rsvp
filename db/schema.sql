@@ -1,4 +1,4 @@
--- Wedding RSVP — Rumesher & Canelle
+-- Wedding RSVP — Rumesh & Canelle
 -- The app creates these tables automatically on the first request.
 -- Run this in the Neon SQL Editor only if you prefer to create them yourself.
 
